@@ -1,6 +1,6 @@
 # tov-template
 
-一个 **vite + vue3 + ts** 开箱即用现代开发模板
+一个 ` vite + vue3 + ts ` 开箱即用现代开发模板
 
 <br />
 <br />
@@ -29,59 +29,164 @@
 20. 支持 Markdown 渲染
 21. 路径别名 `~` 支持
 22. 命令行自动创建与删除
+23. i18n 国际化支持
+24. 漂亮的 404页 支持
+25. tsx 支持
+26. gzip 资源压缩支持
 
+<br />
+<br />
+
+## 克隆模板 🦕
+
+1. Github
+
+```shell
+git clone git@github.com:dishait/tov-template.git
+```
+2. Gitee
+
+```shell
+git clone git@gitee.com:dishait/tov-template.git
+```
+
+3. degit
+
+```shell
+npx degit https://github.com/dishait/tov-template#main
+```
+4. 新的 `Github` 仓库 👉 [Use this template](https://github.com/dishait/tov-template/generate)
+
+<br />
+<br />
+<br />
+
+## `node` 版本推荐 🐎
+
+因为该模板完全面向现代，所以推荐大家使用 `node` 当前的长期维护版本 `v16`， 大于 `v16.13.1` 即可。
+
+<br />
 <br />
 <br />
 
 ## 使用 🐂
 
+> 该模板不限定大家使用某一特定的包管理器，npm，yarn 和 pnpm 都行。同时注意 npm 的版本应该尽量的新。
+
+强烈推荐大家使用更快更合理的 `pnpm` 包管理器 👉 [安装教程](https://pnpm.io/zh/installation)
+
 1. 安装依赖
 ```shell
 pnpm install
+
+# 或者 npm install
+# 或者 yarn
 ```
 
 2. 开发
 ```shell
-pnpm run dev 
+pnpm dev 
+
+# 或者 npm run dev
+# 或者 yarn dev
+
+# 开启 host
+pnpm dev:host  
+
+# 或者 npm run dev:host 
+# 或者 yarn dev:host
+
+# 自动打开浏览器
+pnpm dev:open
+
+# 或者 npm run dev:open
+# 或者 yarn dev:open
 ```
 
 3. 预览
 ```shell
-pnpm run preview
+pnpm preview
+
+# 或者 npm run preview
+# 或者 yarn preview
+
+# 开启 host
+pnpm preview:host
+
+# 或者 npm run preview:host
+# 或者 yarn preview:host
+
+# 自动打开浏览器
+pnpm preview:open
+
+# 或者 npm run preview:open
+# 或者 yarn preview:open
 ```
 
 4. 打包
 
 ```shell
-pnpm run build
+pnpm build
+
+# 或者 npm run build
+# 或者 yarn build
 ```
 
 5. 单元测试
 ```shell
-pnpm run test
+pnpm test
+
+# 或者 npm run test
+# 或者 yarn test
 ```
 
 6. 单元测试报告生成
 ```shell
-pnpm run coverage
+pnpm coverage
+
+# 或者 npm run coverage
+# 或者 yarn coverage
 ```
 
 7. 样式报告预览
-
 ```shell
-pnpm run analysis
+pnpm analysis
+
+# 或者 npm run analysis
+# 或者 yarn analysis
 ```
 
 8. 样式报告打包
-
 ```shell
-pnpm run analysis:build
+pnpm analysis:build
+
+# 或者 npm run analysis:build
+# 或者 yarn analysis:build
 ```
 
 9. 类型检查
+```shell
+pnpm typecheck
+
+# 或者 npm run typecheck
+# 或者 yarn typecheck
+```
+
+10. 自动创建
+```shell
+pnpm auto:create
+
+# 或者 npm run auto:create
+# 或者 yarn auto:create
+```
+
+11. 自动移除
 
 ```shell
-pnpm run typecheck
+pnpm auto:remove
+
+# 或者 npm run auto:remove
+# 或者 yarn auto:remove
 ```
 
 <br />
@@ -103,7 +208,7 @@ pnpm run typecheck
 什么时候你应该用? 
 
 1. 不想浪费时间在项目配置上
-2. 希望尝试用更现代的方式开发 web 应用，提高开发效率
+2. 希望尝试用更现代的方式开发 `web` 应用，提高开发效率
 
 <br />
 <br />
@@ -156,7 +261,7 @@ eg:
 - `src/pages/users/profile.vue` => `/users/profile`
 - `src/pages/users/[id].vue` => `/users/:id`
 - `src/pages/[user]/settings.vue` => `/:user/settings`
--  `src/pages/[...NoFound].vue` => 404 路由
+-  `src/pages/[...notFound].vue` => 404 路由
 
 具体可见 👉 [vite-plugin-pages](https://github.com/hannoeru/vite-plugin-pages#file-system-routing)
 
@@ -183,7 +288,7 @@ eg:
     <div>我是首页</div> 
 </template>
 ``` 
-路由到 `/`时， 页面将渲染
+路由到 `/`时，页面将渲染
 ```html
 我是默认布局
 我是首页
@@ -228,6 +333,7 @@ meta:
 </route>
 ```
 此时路由到 `/`, 页面将渲染
+
 ```html
 我是非默认布局custom
 我是首页
@@ -300,7 +406,64 @@ const doubled = computed(() => count.value * 2)
 1. vue
 2. pinia
 3. vueuse
-4. vue-router
+4. vue-i18n
+5. vue-router
+
+当然还有项目中的自动引入，只需要满足以下规范即可。
+
+1. `src/composables` 下凡是 `use` 开头的模块，同时里边有 `default` 导出，该导出就可以被按需自动引入。
+
+例如有个 `src/composables/foo.ts`
+
+```ts
+// default 导出
+export default 1000
+```
+
+此时就不再需要 `import`了
+
+```html
+<script setup lang="ts">
+    console.log(foo) // 输出 1000
+</script>
+
+<template>
+    <div @click="store.inc()">{{store.counter}}</div>
+</template>
+```
+
+2. `src/stores` 下凡是 `Store` 结尾的模块，同时里边有 `default` 导出，该导出就可以按需自动引入。
+
+例如有个 `src/stores/counterStore.ts`
+
+```ts
+// default 导出
+export default defineStore('counter', {
+    state() {
+        return {
+            counter: 1
+        }
+    },
+    actions: {
+        inc() {
+            this.counter++
+        }
+    }
+})
+```
+此时就不再需要 `import`了
+
+```html
+<script setup lang="ts">
+    const store = counterStore()
+</script>
+
+<template>
+    <div @click="store.inc()">{{store.counter}}</div>
+</template>
+```
+
+具体可见 👉 [unplugin-auto-import](https://github.com/antfu/unplugin-auto-import) 与 [vite-auto-import-resolvers](https://github.com/dishait/vite-auto-import-resolvers)
 
 <br />
 
@@ -333,6 +496,9 @@ const doubled = computed(() => count.value * 2)
 
 ```shell
 pnpm add naive-ui
+
+# 或者 npm i naive-ui
+# 或者 yarn add naive-ui
 ```
 即可在模板中使用。
 
@@ -344,8 +510,10 @@ pnpm add naive-ui
 ```
 目前支持的组件库有:
 
-- [Naive ui](https://www.naiveui.com/zh-CN/os-theme)
+- [naive ui](https://www.naiveui.com/zh-CN/os-theme)
+- [arco.design](https://arco.design/)
 - [element-plus](https://element-plus.gitee.io/zh-CN/)
+- [ant design of vue](https://next.antdv.com/docs/vue/introduce-cn/)
 - [@vueuse/components](https://vueuse.org/guide/components.html)
 
 具体可见 👉 [unplugin-vue-components](https://github.com/antfu/unplugin-vue-components)
@@ -366,15 +534,26 @@ pnpm add naive-ui
 
 ![icons-second-step](public/docs/icons-third-step.png)
 
-在模板中即可直接用组件的形式直接使用。
+在模板中即可直接用组件的形式直接使用，注意加上前缀 `i-`。
 
 ```html
 <template>
-    <mdi:account-box-multiple />
+    <i-mdi:account-box-multiple />
 </template>
 ```
 
-保存后等待自动下载该图标库后，就可以在页面中看到对应图标。
+保存后等待自动下载该图标库后，就可以在页面中看到对应图标。  
+
+注意自动下载图标需要 `pnpm` 包管理器支持，如果你是其他包管理器需要手动安装图标集 👇👇👇
+
+图标集名称为 `@iconify/` 加 `:` 前缀，例如上边的图标是 `mdi:account-box-multiple`，图标集名称就为 `@iconify/mdi`。
+
+```shell
+npm i @iconify/mdi -D
+
+# 或者 yarn add @iconify/mdi -D
+```
+
 
 同时推荐你使用 `vscode` 插件 [Iconify IntelliSense](https://marketplace.visualstudio.com/items?itemName=antfu.iconify)。  
 
@@ -383,7 +562,7 @@ pnpm add naive-ui
 ```html
 <!-- 模板中代码 -->
 <template>
-    <mdi:account-box-multiple />
+    <i-mdi:account-box-multiple />
 </template>
 ```
 将在 `vscode` 中得到图标预览
@@ -438,7 +617,7 @@ pnpm add naive-ui
 ```
 上述模板将渲染红色背景白色的字。
 
-同时支持 [属性化模式](https://cn.windicss.org/features/attributify.html#attributify-mode)，即可以用简写。
+同时支持 [属性化模式](https://cn.windicss.org/features/attributify.html#attributify-mode)，即可以用简写。该功能默认关闭，可在 `windi.config.ts` 中 设置 `attributify` 为 `true` 开启。 
 
 ```html
 <template>
@@ -455,11 +634,17 @@ pnpm add naive-ui
 
 在终端中输入命令，即可看到报告
 ```shell
-pnpm run analysis
+pnpm analysis
+
+# 或者 npm run analysis
+# 或者 yarn analysis
 ```
 或者打包输出该报告
 ```shell
-pnpm run analysis:build
+pnpm analysis:build
+
+# 或者 npm run analysis:build
+# 或者 yarn analysis:build
 ```
 
 具体可见 👉 [Windi CSS](https://cn.windicss.org/)
@@ -473,21 +658,25 @@ pnpm run analysis:build
 
 `src/composables` 目录用来存储 `composition-api` 模块。
 
-该目录下预设了`dark` 模块，该模块导出 `isDark` 和 `toggleDark` 用来显示和切换暗黑模式。
+该目录下预设了`useDarks` 模块，该模块导出 `isDark` 和 `toggleDark` 用来显示和切换暗黑模式。
 
 ```ts
-// src/composables/dark.ts
+// src/composables/useDarks.ts
 
-// vueuse的api会自动按需引入，无需import
+// vueuse的 api 会自动按需引入，无需import
 export const isDark = useDark()
 export const toggleDark = useToggle(isDark)
+
+export const useDarks = () => ({ isDark, toggleDark })
 ```
 
 模板中即可直接用
 
 ```html
 <script setup lang="ts">
-import { isDark, toggleDark } from "../composables/dark";
+import { useDarks } from "../composables/useDarks";
+
+const { isDark, toggleDark } = useDarks()
 </script>
 
 <template>
@@ -607,7 +796,10 @@ export const useCounterStore = defineStore('counter', {
 
 启动项目
 ```shell
-pnpm run dev
+pnpm dev
+
+# 或者 npm run dev
+# 或者 yarn dev
 ```
 可以看到一个 `url`
 
@@ -683,13 +875,19 @@ describe('suite name', () => {
 然后在终端中输入命令即可测试
 
 ```shell
-pnpm run test
+pnpm test
+
+# 或者 npm run test
+# 或者 yarn test
 ```
 
 或者生成报告
 
 ```shell
-pnpm run coverage
+pnpm coverage
+
+# 或者 npm run coverage
+# 或者 yarn coverage
 ```
 
 具体可见 👉 [Vitest](https://vitest.dev/guide/#configuring-vitest)
@@ -726,10 +924,10 @@ pnpm run coverage
 ```html
 <!-- src/pages/index.vue -->
 <script lang="ts" setup>
-    import { isDark, toggleDark } from "~/composables/dark"
+    import { useDarks } from "~/composables/dark"
 
 // 等价于
-// import { isDark, toggleDark } from "../composables/dark"
+// import { useDarks } from "../composables/dark"
 </script>
 ```
 
@@ -740,12 +938,145 @@ pnpm run coverage
 
 只要输入 👇，即可创建一个标准的页面或组件
 ```shell
-pnpm run auto:create
+pnpm auto:create
+
+# 或者 npm run auto:create
+# 或者 yarn auto:create
 ```
 当然也可以进行删除 👇
 ```shell
-pnpm run auto:remove
+pnpm auto:remove
+
+# 或者 npm run auto:remove
+# 或者 yarn auto:remove
 ```
+
+<br />
+<br />
+
+### [23. i18n 国际化支持](https://github.com/intlify/bundle-tools/tree/main/packages/vite-plugin-vue-i18n)
+
+在日常的业务当中，可能会存在一些需要国际化的场景。那么只需要在根目录下的 `locales` 中定义不同语言的 `yml` 即可在项目中做到开箱即用的国际化支持。
+
+比如 `locales/en.yml` 中用来定义需要国际化支持的英文内容。
+```yml
+# locales/en.yml
+# English
+
+index: index
+about: about
+not-found: Notfound
+```
+又如 `locales/zh-CN.yml` 中用来定义需要国际化支持的中文内容。
+
+```yml
+# locales/zh-CN.yml
+# 中文
+
+index: 主页
+about: 关于
+not-found: 未找到页面
+```
+
+此时在组件中即可这样用 👇
+```html
+<script setup>
+// 该api是全局按需引入的，所以可以直接用
+// t 用来绑定特定的语块
+const { t, locale } = useI18n()
+
+const toggleLocale = () => {
+     // locale.value 用来表示当前所属语言，可修改进行语言切换
+     locale.value = locale.value === 'zh-CN' ? 'en' : 'zh-CN'
+}
+</script>
+
+<template>
+    <div m="6" cursor="pointer" @click="toggleLocale()">language: {{ t('index') }} click me!!</div>
+</template>
+```
+
+更详细的说明可见用到的 `vite 插件` 👉 [@intlify/vite-plugin-vue-i18n](https://github.com/intlify/bundle-tools/tree/main/packages/vite-plugin-vue-i18n) 与 `vue插件` [vue-i18n](https://github.com/intlify/vue-i18n-next)。
+
+另外 `yml` 是目前前端中流行的配置文件格式，语法可见阮一峰先生的 👉 [YAML 语言教程](http://www.ruanyifeng.com/blog/2016/07/yaml.html)。
+
+`vscode` 插件推荐: 
+
+- 多合一的 `i18n` 支持 [i18n Ally](https://marketplace.visualstudio.com/items?itemName=Lokalise.i18n-ally)  
+
+<br />
+<br />
+
+### 24. 漂亮的 `404` 页支持
+在日常业务中，当用户访问不存在的页面时，应该给到我们的用户一个不存在的信息提示，而这个提示的页面就是 `404` 页。
+
+你可以随便访问一个不存在的页面，例如 `/bucunzai`
+
+![notFound](public/docs/notFound.png)
+
+当然还有暗黑模式适应。
+
+![notFound-dark](public/docs/notFound-dark.png)
+
+也支持简单的响应式适应。例如移动端浏览器上会有正确的显示。
+
+当然如果这个 `404` 的封面不符合你的口味，那么可以在 `pages/[...notFound].vue` 中修改 `img` 标签的 `src`。默认是 `32.svg`，支持 `1 ~ 33` 的 `svg`。
+
+例如，默认 👇
+```html
+<!-- 省略各种代码 -->
+<template>
+    <img src="/notFound/32.svg" class="cover" alt="page not found" />
+</template>
+```
+
+修改 `/notFound/32.svg` 为 `/notFound/33.svg`
+
+```html
+<!-- 省略各种代码 -->
+<template>
+    <img src="/notFound/33.svg" class="cover" alt="page not found" />
+</template>
+```
+即可切换封面为 👇
+
+![notFound-other](public/docs/notFound-other.png)
+
+<br />
+<br />
+
+
+### 25. [`tsx` 支持](https://github.com/vitejs/vite/tree/main/packages/plugin-vue-jsx)
+
+只需要 `tsx` 文件放在 `src/components` 下，即可直接在模板中使用。
+
+例如你有一个 `src/components/foo.tsx` 文件，那么即可直接在模板中使用。
+
+```tsx
+// src/components/foo.tsx
+export default defineComponent({
+    render() {
+        return <div>Test</div>
+    }
+})
+```
+
+```html
+<template>
+    <foo />
+</template>
+```
+
+具体可见 👉 [@vitejs/plugin-vue-jsx](https://github.com/vitejs/vite/tree/main/packages/plugin-vue-jsx)
+
+<br />
+<br />
+
+### 26. [`gzip` 资源压缩支持](https://github.com/vbenjs/vite-plugin-compression)
+
+生产环境下开箱即用的 `gzip` 资源压缩，无需配置。
+
+具体可见 👉 [vite-plugin-compression](https://github.com/vbenjs/vite-plugin-compression)
 
 <br />
 <br />
