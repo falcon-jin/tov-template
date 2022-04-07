@@ -1,26 +1,23 @@
 import { resolve } from 'path'
+import { env } from './shared/env'
 import Vue from '@vitejs/plugin-vue'
-import Prism from 'markdown-it-prism'
-import Markdown from 'vite-plugin-md'
 import Pages from 'vite-plugin-pages'
 import Icons from 'unplugin-icons/vite'
 import Inspect from 'vite-plugin-inspect'
-import Watcher from 'vite-plugin-watcher'
+import Markdown from './plugins/markdown'
 import Windicss from 'vite-plugin-windicss'
 import vueJsx from '@vitejs/plugin-vue-jsx'
 import ViteRestart from 'vite-plugin-restart'
-import Layouts from 'vite-plugin-vue-layouts'
 import I18n from '@intlify/vite-plugin-vue-i18n'
 import { viteMockServe } from 'vite-plugin-mock'
+import Layouts from 'vite-plugin-vue-meta-layouts'
 import AutoImport from 'unplugin-auto-import/vite'
 import IconsResolver from 'unplugin-icons/resolver'
 import Components from 'unplugin-vue-components/vite'
 import viteCompression from 'vite-plugin-compression'
+import { markdownWrapperClasses } from './plugins/markdown'
 
-import {
-	dirResolver,
-	DirResolverHelper
-} from 'vite-auto-import-resolvers'
+import { DirResolverHelper } from 'vite-auto-import-resolvers'
 import {
 	ArcoResolver,
 	NaiveUiResolver,
@@ -28,50 +25,39 @@ import {
 	ElementPlusResolver,
 	VueUseComponentsResolver
 } from 'unplugin-vue-components/resolvers'
-import { restart } from './shared/restart'
-import OptimizationPersist from 'vite-plugin-optimize-persist'
-import PkgConfig from 'vite-plugin-package-config'
-
-const markdownWrapperClasses =
-	'prose md:prose-lg lg:prose-lg dark:prose-invert text-left p-10 prose-slate prose-img:rounded-xl prose-headings:underline prose-a:text-blue-600'
+import Modules from 'vite-plugin-use-modules'
+import { GenerateTitle } from './plugins/html'
+import { AutoImportResolvers } from './shared/resolvers'
 
 export default () => {
 	return [
-		// 将包信息文件作为 vite 的配置文件之一，为 vite-plugin-optimize-persist 所用
-		PkgConfig(),
-		// 依赖预构建分析，提高大型项目性能
-		OptimizationPersist(),
+		Modules(),
+		// 生成 title
+		GenerateTitle(),
 		// vue 官方插件，用来解析 sfc
 		Vue({
 			include: [/\.vue$/, /\.md$/]
 		}),
 		// markdown 编译插件
-		Markdown({
-			wrapperClasses: markdownWrapperClasses,
-			markdownItSetup(md) {
-				md.use(Prism)
-			}
-		}),
+		Markdown(),
 		// 文件路由
 		Pages({
 			extensions: ['vue', 'md', 'tsx']
 		}),
 		// 布局系统
 		Layouts(),
-		// layouts 目录下文件新增重启
-		// fix: vite-plugin-vue-layouts 在dev Server时新建报错问题
-		Watcher(w => {
-			w.add('./src/layouts')
-			w.on('add', restart)
-		}),
 		// 调试工具
-		Inspect(),
+		Inspect({
+			enabled: env.VITE_APP_INSPECT
+		}),
 		// windicss 插件
 		Windicss({
 			safelist: markdownWrapperClasses
 		}),
 		// mock 服务
-		viteMockServe(),
+		viteMockServe({
+			prodEnabled: env.VITE_APP_MOCK_IN_PRODUCTION
+		}),
 		// https://icones.netlify.app/
 		Icons({
 			autoInstall: true
@@ -91,26 +77,22 @@ export default () => {
 			]
 		}),
 		// 目录下 api 按需自动引入辅助插件
-		DirResolverHelper(),
+		env.VITE_APP_API_AUTO_IMPORT &&
+			env.VITE_APP_DIR_API_AUTO_IMPORT &&
+			DirResolverHelper(),
 		// api 自动按需引入
-		AutoImport({
-			dts: './presets/types/auto-imports.d.ts',
-			imports: [
-				'vue',
-				'pinia',
-				'vue-i18n',
-				'vue-router',
-				'@vueuse/core'
-			],
-			resolvers: [
-				ElementPlusResolver(),
-				dirResolver({ prefix: 'use' }),
-				dirResolver({
-					target: 'stores',
-					suffix: 'Store'
-				})
-			]
-		}),
+		env.VITE_APP_API_AUTO_IMPORT &&
+			AutoImport({
+				dts: './presets/types/auto-imports.d.ts',
+				imports: [
+					'vue',
+					'pinia',
+					'vue-i18n',
+					'vue-router',
+					'@vueuse/core'
+				],
+				resolvers: AutoImportResolvers
+			}),
 		// i18n 国际化支持
 		I18n({
 			runtimeOnly: true,
@@ -119,11 +101,18 @@ export default () => {
 		}),
 		// 预设热重启服务
 		ViteRestart({
-			restart: ['presets/tov.[jt]s', 'presets/shared/**/*']
+			restart: [
+				'.env*',
+				'presets/tov.[jt]s',
+				'presets/shared/**/*'
+			]
 		}),
 		// tsx 支持
 		vueJsx(),
 		// 生产环境资源压缩
-		viteCompression()
+		viteCompression({
+			// @ts-ignore
+			algorithm: env.VITE_APP_COMPRESSINON_ALGORITHM
+		})
 	]
 }

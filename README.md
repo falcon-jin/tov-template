@@ -1,6 +1,10 @@
-# tov-template
+<div align="center">
+    <img width="200px" height="200px" src="https://gitee.com/dishait/tov-template/raw/main/public/logo.png" />
+    <h1>tov-template</h1>
+    <p>vite + vue3 + ts 开箱即用现代开发模板</p>
+</div>
 
-一个 ` vite + vue3 + ts ` 开箱即用现代开发模板
+
 
 <br />
 <br />
@@ -33,6 +37,7 @@
 24. 漂亮的 404页 支持
 25. tsx 支持
 26. gzip 资源压缩支持
+27. 环境变量配置支持
 
 <br />
 <br />
@@ -189,6 +194,41 @@ pnpm auto:remove
 # 或者 yarn auto:remove
 ```
 
+12. 依赖更新
+
+```shell
+# 安全版本更新
+pnpm deps:fresh
+
+# 或者 npm run deps:fresh
+# 或者 yarn deps:fresh
+
+# 主版本更新，可能是破坏性更新，谨慎使用，做好测试
+pnpm deps:fresh:major
+
+# 或者 npm run deps:fresh:major
+# 或者 yarn deps:fresh:major
+
+# 次版本更新，可能是破坏性更新，谨慎使用，做好测试
+pnpm deps:fresh:minor
+
+# 或者 npm run deps:fresh:minor
+# 或者 yarn deps:fresh:minor
+
+# 补丁版本更新
+pnpm deps:fresh:patch
+
+# 或者 npm run deps:fresh:patch
+# 或者 yarn deps:fresh:patch
+```
+```shell
+# 以上命令仅对包信息 package.json 进行写入，需要重新执行包安装命令
+pnpm i
+
+# 或者 npm i
+# 或者 yarn
+```
+
 <br />
 <br />
 
@@ -267,7 +307,7 @@ eg:
 
 <br />
 
-### [4. 布局系统](https://github.com/JohnCampionJr/vite-plugin-vue-layouts)
+### [4. 布局系统](https://github.com/dishait/vite-plugin-vue-meta-layouts)
 
 #### 默认布局
 
@@ -339,7 +379,7 @@ meta:
 我是首页
 ```
 
-具体可见 👉 [vite-plugin-vue-layouts](https://github.com/JohnCampionJr/vite-plugin-vue-layouts#overview) 
+具体可见 👉 [vite-plugin-vue-meta-layouts](https://github.com/dishait/vite-plugin-vue-meta-layouts) 
 
 <br />
 
@@ -1082,9 +1122,18 @@ export default defineComponent({
 <br />
 <br />
 
+### 27. [环境变量配置支持](https://cn.vitejs.dev/guide/env-and-mode.html)
+
+根目录下有三个环境变量配置文件 `.env`，`.env.development` 和 `.env.production` 用来对项目进行配置。
+
+
+<br />
+<br />
+<br />
+
 ## License
 
-Made with markthree
+Made with [markthree](./LICENSE)
 
 Published under [MIT License](./LICENSE).
 
